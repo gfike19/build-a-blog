@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+
+{% block content %}
+<form action = "submit" method = "post">
+  <label>
+    <p>Enter a blog title:
+    <input type = "text" name = "blog_title"/></p>
+    <p>Enter the blog itelf:</p>
+    <textarea name = "blog_text"></textarea>
+    <p><input type = "submit" />
+    <form action = "history" method = "post">
+      <p>
+    <input type = "submit" value = "Select an older blog"/></p>
+  </form>
+  </label>
+</form>
+{{error}}
+{% endblock %}

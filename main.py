@@ -1,25 +1,43 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import webapp2
+import os
+import jinja2
 
-class MainHandler(webapp2.RequestHandler):
+from google.appengine.ext import db
+
+template_dir = os.path.join(os.path.dirname(__file__),'templates')
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
+
+class Handler(webapp2.RequestHandler):
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
+    def render_str(self, template, **params):
+        t = jinja_env.get_template(template)
+        return t.render(params)
+
+    def render (self, template, **kw):
+        self.write(self.render_str(template, **kw))
+
+class Post(db.Model):
+    blog_title = db.StringProperty(required = True)
+    blog_text = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+
+class Index(Handler):
     def get(self):
-        self.response.write('Hello world!')
+        self.render("submit-form.html")
 
-app = webapp2.WSGIApplication([
-    ('/', MainHandler)
-], debug=True)
+    def post(self):
+        blog_title = self.request.get("blog_title")
+        blog_text = self.request.get("blog_text")
+
+        if blog_title and blog_text:
+            error = "Fields cannot be empty"
+        p = Post(blog_title = blog_title, blog_text = blog_text)
+
+class Posts(Handler):
+    def post(self):
+
+
+
+app = webapp2.WSGIApplication([('/', Index), ('/blog', Posts)], debug = True)
