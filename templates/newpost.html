@@ -1,18 +1,15 @@
 {% extends "base.html"%}
 
 {% block content %}
-<form action = "submit" method = "post">
+<h1>Create a new blog!</h1>
+<form action = "newpost" method = "post">
   <label>
     <p>Enter a blog title:
     <input type = "text" name = "blog_title"/></p>
     <p>Enter the blog itelf:</p>
     <textarea name = "blog_text"></textarea>
-    <p><input type = "submit" />
-    <form action = "history" method = "post">
-      <p>
-    <input type = "submit" value = "Select an older blog"/></p>
+    <input type = "submit"/>
   </form>
   </label>
 </form>
-{{error}}
 {% endblock %}

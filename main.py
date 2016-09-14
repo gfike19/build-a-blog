@@ -18,14 +18,21 @@ class Handler(webapp2.RequestHandler):
     def render (self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+class Home(Handler):
+    def get(self):
+        self.render("home.html")
+
+
 class Post(db.Model):
     blog_title = db.StringProperty(required = True)
     blog_text = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
-class Index(Handler):
+
+
+class NewPost(Handler):
     def get(self):
-        self.render("submit-form.html")
+        self.render("newpost.html")
 
     def post(self):
         blog_title = self.request.get("blog_title")
@@ -34,10 +41,17 @@ class Index(Handler):
         if blog_title and blog_text:
             error = "Fields cannot be empty"
         p = Post(blog_title = blog_title, blog_text = blog_text)
+        p.put()
+        message = "Blog was successfully saved!"
+        self.redirect('/')
 
-class Posts(Handler):
+class History(Handler):
     def post(self):
+        posts = "SELECT * from Post" "ORDER BY created" "LIMIT 5"
+        self.render("blog.html")
 
-
-
-app = webapp2.WSGIApplication([('/', Index), ('/blog', Posts)], debug = True)
+app = webapp2.WSGIApplication([
+    ('/', Home),
+    ('/blog', History),
+    ('/newpost', NewPost)
+], debug = True)

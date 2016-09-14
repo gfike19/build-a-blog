@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Blogs Galore</title>
+    <title>Build a Blog!</title>
   </head>
   <body>
     {% block content %}{% endblock %}
+    <p>
+    <input type = "button" value = "Create a new blog" action = "/newpost" name = "Create a new blog" method = "post"/>
+    <input type = "button" value = "View older blogs" action = "/blog" name = "View older blogs" method = "post"/>
+  </p>
+  {{error}}
+  {{message}}
   </body>
 </html>
