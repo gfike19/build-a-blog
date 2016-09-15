@@ -5,10 +5,12 @@
   </head>
   <body>
     {% block content %}{% endblock %}
-    <p>
-    <input type = "button" value = "Create a new blog" action = "/newpost" name = "Create a new blog" method = "post"/>
-    <input type = "button" value = "View older blogs" action = "/blog" name = "View older blogs" method = "post"/>
-  </p>
+        <form action = "newpost.html" method = "link">
+            <input type = "button" value = "Create a new blog" name = "Create a new blog"/>
+        </form>
+        <form action = "history.html" method = "link">
+            <input type = "button" value = "View older blogs" action = "/blog" name = "View older blogs"/>
+        </form>
   {{error}}
   {{message}}
   </body>
