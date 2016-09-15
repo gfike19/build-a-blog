@@ -5,11 +5,11 @@
   </head>
   <body>
     {% block content %}{% endblock %}
-        <form action = "newpost.html" method = "link">
+        <form action = "/newpost" method = "post">
             <input type = "button" value = "Create a new blog" name = "Create a new blog"/>
         </form>
-        <form action = "history.html" method = "link">
-            <input type = "button" value = "View older blogs" action = "/blog" name = "View older blogs"/>
+        <form action = "/blog" method = "post">
+            <input type = "button" value = "View older blogs" name = "View older blogs"/>
         </form>
   {{error}}
   {{message}}

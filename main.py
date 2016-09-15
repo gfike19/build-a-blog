@@ -1,5 +1,6 @@
 import webapp2
 import os
+import re
 import jinja2
 
 from google.appengine.ext import db
@@ -22,11 +23,22 @@ class Home(Handler):
     def get(self):
         self.render("home.html")
 
+    def post(self):
+        action = self.request.get("action")
+        if action == "/newpost":
+            self.render("newpost.html")
+        if action == "/blog":
+            self.render("history.html")
+
 
 class Post(db.Model):
     blog_title = db.StringProperty(required = True)
     blog_text = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
+
+class ViewPostHandler(Handler):
+    def get(self, id):
+        pass
 
 
 
@@ -49,6 +61,8 @@ class History(Handler):
     def post(self):
         posts = "SELECT * from Post" "ORDER BY created" "LIMIT 5"
         self.render("blog.html")
+
+webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 
 app = webapp2.WSGIApplication([
     ('/', Home),
