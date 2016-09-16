@@ -19,19 +19,24 @@ class Handler(webapp2.RequestHandler):
     def render (self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-class Home(Handler):
-    def get(self):
-        self.render("home.html")
+# class Home(Handler):
+#     def get(self):
+#         self.render("home.html")
 
 class Post(db.Model):
     blog_title = db.StringProperty(required = True)
     blog_text = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
-# class ViewPostHandler(Handler):
-#     def get(self, id):
-#         pass
+class ViewPostHandler(Handler):
+    def get(self, id):
+        o = Post.get_by_id(int(id))
+        if o:
+            self.render("newpost.html")
 
+class SinglePost(Handler):
+    def get(self):
+        self.render("singlepost.html")
 
 
 class NewPost(Handler):
@@ -52,10 +57,9 @@ class NewPost(Handler):
             p.put()
             # Post.put(p)
             # message = "Blog was successfully saved!"
-            self.redirect('/blog')
         else:
             error = "Fields cannot be empty"
-            self.render_newblog(blog_title, blog_text, error)
+            # self.render_newblog("newpost.html",blog_title, blog_text, error)
 
 class History(Handler):
     def post(self):
@@ -66,6 +70,7 @@ class History(Handler):
 
 app = webapp2.WSGIApplication([
     # ('/', Home),
-    ('/', NewPost),
-    ('/blog', History)
+    webapp2.Route('/', NewPost),
+    webapp2.Route('/blog', History),
+    webapp2.Route('/blog/<id:\d+>', handler = ViewPostHandler)
 ], debug = True)
