@@ -30,9 +30,9 @@ class Post(db.Model):
 
 class ViewPostHandler(Handler):
     def get(self, id):
-        o = Post.get_by_id(int(id))
-        if o:
-            self.render("newpost.html")
+        num_id = Post.get_by_id(int(id))
+        if num_id:
+            self.response.write()
 
 class SinglePost(Handler):
     def get(self):
