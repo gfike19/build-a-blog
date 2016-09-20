@@ -26,20 +26,20 @@ class Post(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
 
 class ViewPostHandler(Handler):
-    def gett(self, id):
-        num_id = Post.get_by_id(int(id))
-        if num_id:
-            self.render("blog,html")
+    def get(self, id):
+        post = Post.get_by_id(int(id))
+        p_title = str(post.blog_title())
+        p_text = str(post.blog_text())
+        if post.blog_title:
+            self.render("view-single-post.html", post = post)
         else:
             error = "Blog not found"
             self.render("newpost.html", error = error)
 
 class NewPost(Handler):
-    def render_newblog(self, error = "", blog_title = "", blog_text = ""):
-        self.render("newpost.html", error = error, blog_title = blog_title, blog_text = blog_text)
 
     def get(self):
-        self.render_newblog()
+        self.render("newpost.html")
 
     def post(self):
         blog_title = self.request.get("blog_title")
@@ -48,12 +48,11 @@ class NewPost(Handler):
         if blog_title and blog_text:
             p = Post(blog_title = blog_title, blog_text = blog_text)
             p.put()
-            p_id = p.key()
+            p_id = p.key().id()
             self.redirect("/blog/%s" % p_id)
-
         else:
             error = "Fields cannot be empty"
-            self.render_newblog(error = error, blog_title = blog_title, blog_text = blog_text)
+            self.render("newpost.html", error = error, blog_title = blog_title, blog_text = blog_text)
 
 class History(Handler):
     def get(self):
@@ -62,7 +61,8 @@ class History(Handler):
 
 
 app = webapp2.WSGIApplication([
-('/', NewPost),
+('/blog/newpost', NewPost), #new post
     webapp2.Route('/blog/<id:\d+>', ViewPostHandler),
-    ('/blog', History)
+    ('/blog', History) #mainpage
 ], debug = True)
+#

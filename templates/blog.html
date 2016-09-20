@@ -1,7 +1,7 @@
 {% extends "base.html"%}
 {% block content %}
 <h3>Past Five Blogs</h3>
-{%for post in posts %}
+{% for post in posts %}
 {{post.blog_title}}
 <br><br>
 {{post.blog_text}}
