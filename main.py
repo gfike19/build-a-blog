@@ -19,9 +19,6 @@ class Handler(webapp2.RequestHandler):
     def render (self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-# class Home(Handler):
-#     def get(self):
-#         self.render("home.html")
 
 class Post(db.Model):
     blog_title = db.StringProperty(required = True)
@@ -29,15 +26,13 @@ class Post(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
 
 class ViewPostHandler(Handler):
-    def get(self, id):
+    def gett(self, id):
         num_id = Post.get_by_id(int(id))
         if num_id:
-            self.response.write()
-
-class SinglePost(Handler):
-    def get(self):
-        self.render("singlepost.html")
-
+            self.render("blog,html")
+        else:
+            error = "Blog not found"
+            self.render("newpost.html", error = error)
 
 class NewPost(Handler):
     def render_newblog(self, error = "", blog_title = "", blog_text = ""):
@@ -52,25 +47,22 @@ class NewPost(Handler):
 
         if blog_title and blog_text:
             p = Post(blog_title = blog_title, blog_text = blog_text)
-            # newpost = p.put()
-            # Post.put()
             p.put()
-            # Post.put(p)
-            # message = "Blog was successfully saved!"
+            p_id = p.key()
+            self.redirect("/blog/%s" % p_id)
+
         else:
             error = "Fields cannot be empty"
-            # self.render_newblog("newpost.html",blog_title, blog_text, error)
+            self.render_newblog(error = error, blog_title = blog_title, blog_text = blog_text)
 
 class History(Handler):
-    def post(self):
+    def get(self):
         posts = db.GqlQuery("SELECT * from Post ORDER BY created LIMIT 5")
-        self.render("blog.html")
+        self.render("blog.html", posts = posts)
 
-# webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 
 app = webapp2.WSGIApplication([
-    # ('/', Home),
-    webapp2.Route('/', NewPost),
-    webapp2.Route('/blog', History),
-    webapp2.Route('/blog/<id:\d+>', handler = ViewPostHandler)
+('/', NewPost),
+    webapp2.Route('/blog/<id:\d+>', ViewPostHandler),
+    ('/blog', History)
 ], debug = True)
