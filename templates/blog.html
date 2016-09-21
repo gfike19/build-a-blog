@@ -1,10 +1,13 @@
 {% extends "base.html"%}
 {% block content %}
-<h3>Past Five Blogs</h3>
+<h1>Past Five Blogs</h1>
 {% for post in posts %}
+<h2>Title</h2>
 {{post.blog_title}}
 <br><br>
+<h2>Text</h2>
 {{post.blog_text}}
+<br><br>
 {% endfor %}
 {{error}}
 {% endblock %}

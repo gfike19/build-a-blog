@@ -28,8 +28,7 @@ class Post(db.Model):
 class ViewPostHandler(Handler):
     def get(self, id):
         post = Post.get_by_id(int(id))
-        p_title = str(post.blog_title())
-        p_text = str(post.blog_text())
+        post_title = db.GqlQuery("SELECT DISTINCT Title FROM Post WHERE Title LIKE :post.title()")
         if post.blog_title:
             self.render("view-single-post.html", post = post)
         else:
