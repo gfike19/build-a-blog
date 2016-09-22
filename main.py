@@ -58,8 +58,13 @@ class History(Handler):
         posts = db.GqlQuery("SELECT * from Post ORDER BY created LIMIT 5")
         self.render("blog.html", posts = posts)
 
+class Home(Handler):
+    def get(self):
+        
+
 
 app = webapp2.WSGIApplication([
+('/', Home),
 ('/blog/newpost', NewPost), #new post
     webapp2.Route('/blog/<id:\d+>', ViewPostHandler),
     ('/blog', History) #mainpage
