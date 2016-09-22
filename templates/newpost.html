@@ -5,10 +5,11 @@
 <form method = "post">
   <label>
     <p>Enter a blog title:
-    <input type = "text" name = "blog_title" value = "{{blog_title}}"/></p>
+    <input type = "text" name = "blog_title" value = "{{blog_title}}" required= "True"/></p>
     <p>Enter the blog itelf:</p>
-    <textarea name = "blog_text">{{blog_text}}</textarea>
+    <textarea name = "blog_text" required = "True">{{blog_text}}</textarea>
     <input type = "submit"/>
   </label>
 </form>
+<br><br>
 {% endblock %}

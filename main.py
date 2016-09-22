@@ -2,11 +2,11 @@ import webapp2
 import os
 import re
 import jinja2
-
 from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__),'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
+p_id = 0
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -27,13 +27,15 @@ class Post(db.Model):
 
 class ViewPostHandler(Handler):
     def get(self, id):
-        post = Post.get_by_id(int(id))
-        post_title = db.GqlQuery("SELECT DISTINCT Title FROM Post WHERE Title LIKE :post.title()")
-        if post.blog_title:
-            self.render("view-single-post.html", post = post)
+        # post_id = Post.get_by_id(int(id)) not necessary?
+        if p_id:
+            # post = db.GqlQuery("SELECT * FROM Post WHERE ID == p_id")
+            title = db.GqlQuery("SELECT blog_title FROM Post WHERE ID == p_id")
+            text = db.GqlQuery("SELECT blog_text FROM Post WHERE ID == p_id")
+            self.render("view-single-post.html", title = title, text = text)
         else:
-            error = "Blog not found"
-            self.render("newpost.html", error = error)
+            error = "Blog may not have been stored"
+            self.render("view-single-post.html", error = error)
 
 class NewPost(Handler):
 
@@ -55,17 +57,17 @@ class NewPost(Handler):
 
 class History(Handler):
     def get(self):
-        posts = db.GqlQuery("SELECT * from Post ORDER BY created LIMIT 5")
+        posts = db.GqlQuery("SELECT * from Post ORDER BY created DESC LIMIT 5")
         self.render("blog.html", posts = posts)
 
 class Home(Handler):
     def get(self):
-        
+        self.render("home.html")
 
 
-app = webapp2.WSGIApplication([
-('/', Home),
-('/blog/newpost', NewPost), #new post
+
+app = webapp2.WSGIApplication([('/', Home),
+    ('/blog/newpost', NewPost), #new post
     webapp2.Route('/blog/<id:\d+>', ViewPostHandler),
     ('/blog', History) #mainpage
 ], debug = True)
