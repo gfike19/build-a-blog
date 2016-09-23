@@ -29,6 +29,7 @@ class ViewPostHandler(Handler):
     def get(self, id):
         # post_id = Post.get_by_id(int(id)) not necessary?
         if p_id:
+            query = Post.all().order('-author')
             # post = db.GqlQuery("SELECT * FROM Post WHERE ID == p_id")
             title = db.GqlQuery("SELECT blog_title FROM Post WHERE ID == p_id")
             text = db.GqlQuery("SELECT blog_text FROM Post WHERE ID == p_id")
