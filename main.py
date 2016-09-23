@@ -6,7 +6,7 @@ from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__),'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
-p_id = 0
+# p_id = 0
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -27,13 +27,14 @@ class Post(db.Model):
 
 class ViewPostHandler(Handler):
     def get(self, id):
-        # post_id = Post.get_by_id(int(id)) not necessary?
-        if p_id:
-            query = Post.all().order('-author')
+        post = Post.get_by_id(int(id))
+        if post:
+            # query = Post.all().order('-author')
             # post = db.GqlQuery("SELECT * FROM Post WHERE ID == p_id")
-            title = db.GqlQuery("SELECT blog_title FROM Post WHERE ID == p_id")
-            text = db.GqlQuery("SELECT blog_text FROM Post WHERE ID == p_id")
-            self.render("view-single-post.html", title = title, text = text)
+            # title = db.GqlQuery("SELECT blog_title FROM Post WHERE ID == p_id")
+            # text = db.GqlQuery("SELECT blog_text FROM Post WHERE ID == p_id")
+            # self.render("view-single-post.html", title = title, text = text)
+            self.render("view-single-post.html", post = post)
         else:
             error = "Blog may not have been stored"
             self.render("view-single-post.html", error = error)
