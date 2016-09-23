@@ -58,9 +58,11 @@ class NewPost(Handler):
             self.render("newpost.html", error = error, blog_title = blog_title, blog_text = blog_text)
 
 class History(Handler):
+    posts = db.GqlQuery("SELECT * from Post ORDER BY created DESC LIMIT 5")
     def get(self):
-        posts = db.GqlQuery("SELECT * from Post ORDER BY created DESC LIMIT 5")
         self.render("blog.html", posts = posts)
+    def post(self):
+        self.redirect("")
 
 class Home(Handler):
     def get(self):
