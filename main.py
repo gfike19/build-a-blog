@@ -6,7 +6,7 @@ from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__),'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
-# p_id = 0
+path = ""
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -58,11 +58,13 @@ class NewPost(Handler):
             self.render("newpost.html", error = error, blog_title = blog_title, blog_text = blog_text)
 
 class History(Handler):
-    posts = db.GqlQuery("SELECT * from Post ORDER BY created DESC LIMIT 5")
+    post = ""
     def get(self):
-        self.render("blog.html", posts = posts)
+        post = db.GqlQuery("SELECT * from Post ORDER BY created DESC LIMIT 5")
+        self.render("blog.html", post = post)
     def post(self):
-        self.redirect("")
+        path = "/blog" + post.ID
+        self.redirect(path, post = post)
 
 class Home(Handler):
     def get(self):
@@ -73,6 +75,7 @@ class Home(Handler):
 app = webapp2.WSGIApplication([('/', Home),
     ('/blog/newpost', NewPost), #new post
     webapp2.Route('/blog/<id:\d+>', ViewPostHandler),
+    webapp2.Route(path, ViewPostHandler),
     ('/blog', History) #mainpage
 ], debug = True)
 #

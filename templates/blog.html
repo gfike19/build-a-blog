@@ -1,9 +1,9 @@
 {% extends "base.html"%}
 {% block content %}
 <h1>Past Five Blogs</h1>
-{% for post in posts %}
-<a href = "/blog/{{post.id}}">{{post.blog_title}}</a>
-{{post.blog_text}}
+{% for blog in post %}
+<a href = "/blog/<id:\d+>">{{blog.blog_title}}</a>
+{{blog.blog_text}}
 <br><br><br>
 {% endfor %}
 {{error}}
