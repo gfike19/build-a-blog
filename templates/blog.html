@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Past Five Blogs</h1>
 {% for blog in post %}
-<a href = '/blog/%s" % p_id' {{p_id}}>{{blog.blog_title}}</a>
+<a href = '/blog/{{blog.key().id()}}'> {{blog.blog_title}} </a>
 {{blog.blog_text}}
 <br><br><br>
 {% endfor %}
