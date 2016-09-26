@@ -38,6 +38,10 @@ class ViewPostHandler(Handler):
         else:
             error = "Blog may not have been stored"
             self.render("view-single-post.html", error = error)
+        def post(self, id):
+            post = Post.get_by_id(int(id))
+            self.render("view-single-post.html", post = post)
+
 
 class NewPost(Handler):
 
@@ -58,13 +62,12 @@ class NewPost(Handler):
             self.render("newpost.html", error = error, blog_title = blog_title, blog_text = blog_text)
 
 class History(Handler):
-    post = ""
     def get(self):
         post = db.GqlQuery("SELECT * from Post ORDER BY created DESC LIMIT 5")
         self.render("blog.html", post = post)
     def post(self):
-        path = "/blog" + post.ID
-        self.redirect(path, post = post)
+        post = Post.get_by_id(int(id))
+        self.redirect("view-single-post.html", post = post)
 
 class Home(Handler):
     def get(self):
